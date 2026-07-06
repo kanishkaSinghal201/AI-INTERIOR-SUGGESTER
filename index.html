@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DesignAI — AI-Powered Interior Design Platform</title>
+  <meta name="description"
+    content="Transform your space with AI-powered interior design. Generate floor plans, 3D renders, Vastu validation, material recommendations and shopping budgets — all in one platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Three.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <div class="logo-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="url(#logoGrad)" />
+            <path d="M8 16L14 10L20 16L26 10" stroke="white" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+            <path d="M8 22L14 16L20 22L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round"
+              stroke-linejoin="round" opacity="0.6" />
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32">
+                <stop offset="0%" stop-color="#7C3AED" />
+                <stop offset="100%" stop-color="#2563EB" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">DesignAI</span>
+      </div>
+      <div class="nav-links">
+        <a href="#phases" class="nav-link">Phases</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#workflow" class="nav-link">Workflow</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn-ghost" id="loginBtn">Sign In</button>
+        <button class="btn-primary" id="startBtn">Launch Platform</button>
+      </div>
+      <button class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="hero-orb orb-1"></div>
+      <div class="hero-orb orb-2"></div>
+      <div class="hero-orb orb-3"></div>
+      <div class="grid-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        <span>12-Phase AI Design Pipeline</span>
+      </div>
+      <h1 class="hero-title">
+        Design Your Dream Space<br />
+        <span class="gradient-text">Powered by AI</span>
+      </h1>
+      <p class="hero-desc">
+        From natural language prompt to photorealistic 3D render — our AI platform handles floor planning, Vastu
+        validation, material selection, furniture placement, and budget estimation automatically.
+      </p>
+      <div class="hero-cta">
+        <button class="btn-hero" id="heroStartBtn">Start Designing Free</button>
+        <button class="btn-hero-ghost" id="heroWatchBtn">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5" />
+            <path d="M8 7l5 3-5 3V7z" fill="currentColor" />
+          </svg>
+          See Demo
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num">12</span>
+          <span class="stat-label">AI Phases</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">3D</span>
+          <span class="stat-label">Renders</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Designs</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="design-preview-card">
+        <div class="preview-header">
+          <div class="preview-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="preview-title">AI Design Studio</span>
+        </div>
+        <div class="preview-canvas" id="heroCanvas">
+          <canvas id="miniFloorPlan" width="320" height="200"></canvas>
+        </div>
+        <div class="preview-phases-strip">
+          <div class="phase-chip active" data-phase="1">Foundation</div>
+          <div class="phase-chip" data-phase="2">CAD Engine</div>
+          <div class="phase-chip" data-phase="3">AI Prompt</div>
+          <div class="phase-chip" data-phase="4">Floor Plan</div>
+          <div class="phase-chip" data-phase="5">Vastu</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Phases Overview -->
+  <section class="phases-section" id="phases">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-badge">Complete Pipeline</div>
+        <h2 class="section-title">All 12 Phases at a Glance</h2>
+        <p class="section-desc">Each phase is a specialized AI module that works together to create your perfect
+          interior design</p>
+      </div>
+      <div class="phases-timeline" id="phasesTimeline">
+        <!-- Phases injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Platform App -->
+  <section class="platform-section" id="features">
+    <div class="platform-container">
+      <div class="section-header">
+        <div class="section-badge">Live Platform</div>
+        <h2 class="section-title">Try It Now</h2>
+        <p class="section-desc">Experience all 12 phases in this interactive demo</p>
+      </div>
+
+      <!-- Phase Tabs -->
+      <div class="phase-tabs-wrapper">
+        <div class="phase-tabs" id="phaseTabs">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+
+      <!-- Phase Panels -->
+      <div class="phase-panels" id="phasePanels">
+
+        <!-- Phase 1: Foundation -->
+        <div class="phase-panel active" id="panel-1">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">01</div>
+                <div>
+                  <h3 class="panel-title">Application Foundation</h3>
+                  <p class="panel-subtitle">React + FastAPI + PostgreSQL + JWT Auth</p>
+                </div>
+              </div>
+              <div class="auth-demo">
+                <div class="auth-tabs">
+                  <button class="auth-tab active" data-tab="login">Sign In</button>
+                  <button class="auth-tab" data-tab="register">Register</button>
+                </div>
+                <div class="auth-form" id="loginForm">
+                  <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="designer@example.com" class="form-input" />
+                  </div>
+                  <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" class="form-input" />
+                  </div>
+                  <button class="btn-primary full-width" id="loginSubmit">Sign In with JWT</button>
+                  <div class="auth-demo-hint">Demo: use any email + password</div>
+                </div>
+                <div class="auth-form hidden" id="registerForm">
+                  <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" placeholder="John Designer" class="form-input" />
+                  </div>
+                  <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="regEmail" placeholder="you@example.com" class="form-input" />
+                  </div>
+                  <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" placeholder="••••••••" class="form-input" />
+                  </div>
+                  <button class="btn-primary full-width" id="registerSubmit">Create Account</button>
+                </div>
+              </div>
+              <div class="feature-list">
+                <div class="feature-item"><span class="check-icon">✓</span> JWT Authentication</div>
+                <div class="feature-item"><span class="check-icon">✓</span> Project Management</div>
+                <div class="feature-item"><span class="check-icon">✓</span> Cloud Storage</div>
+                <div class="feature-item"><span class="check-icon">✓</span> Version History</div>
+              </div>
+            </div>
+            <div class="panel-right">
+              <div class="dashboard-preview" id="dashboardPreview">
+                <div class="db-header">
+                  <div class="db-user-info">
+                    <div class="db-avatar" id="dbAvatar">?</div>
+                    <div>
+                      <div class="db-name" id="dbName">Not Signed In</div>
+                      <div class="db-role">Interior Designer</div>
+                    </div>
+                  </div>
+                  <div class="db-badge" id="dbBadge">Offline</div>
+                </div>
+                <div class="db-stats">
+                  <div class="db-stat"><span class="db-stat-n">3</span><span class="db-stat-l">Projects</span></div>
+                  <div class="db-stat"><span class="db-stat-n">12</span><span class="db-stat-l">Renders</span></div>
+                  <div class="db-stat"><span class="db-stat-n">5</span><span class="db-stat-l">Versions</span></div>
+                </div>
+                <div class="db-projects">
+                  <div class="db-project-item">
+                    <div class="db-project-icon">🏠</div>
+                    <div>
+                      <div class="db-project-name">Modern Living Room</div>
+                      <div class="db-project-date">Today</div>
+                    </div>
+                    <div class="db-project-status active">Active</div>
+                  </div>
+                  <div class="db-project-item">
+                    <div class="db-project-icon">🍳</div>
+                    <div>
+                      <div class="db-project-name">Modular Kitchen</div>
+                      <div class="db-project-date">Yesterday</div>
+                    </div>
+                    <div class="db-project-status done">Done</div>
+                  </div>
+                  <div class="db-project-item">
+                    <div class="db-project-icon">🛏</div>
+                    <div>
+                      <div class="db-project-name">Master Bedroom</div>
+                      <div class="db-project-date">2d ago</div>
+                    </div>
+                    <div class="db-project-status done">Done</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 2: 2D CAD Engine -->
+        <div class="phase-panel" id="panel-2">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">02</div>
+                <div>
+                  <h3 class="panel-title">2D CAD Engine</h3>
+                  <p class="panel-subtitle">Canvas/SVG — Walls, Rooms, Doors, Windows</p>
+                </div>
+              </div>
+              <div class="cad-tools">
+                <div class="cad-tool-group">
+                  <div class="tool-group-label">Draw Tools</div>
+                  <div class="tool-buttons">
+                    <button class="tool-btn active" id="toolWall" data-tool="wall">🧱 Wall</button>
+                    <button class="tool-btn" id="toolRoom" data-tool="room">⬜ Room</button>
+                    <button class="tool-btn" id="toolDoor" data-tool="door">🚪 Door</button>
+                    <button class="tool-btn" id="toolWindow" data-tool="window">🪟 Window</button>
+                    <button class="tool-btn" id="toolStairs" data-tool="stairs">🪜 Stairs</button>
+                  </div>
+                </div>
+                <div class="cad-tool-group">
+                  <div class="tool-group-label">Operations</div>
+                  <div class="tool-buttons">
+                    <button class="tool-btn" id="toolSelect" data-tool="select">↖ Select</button>
+                    <button class="tool-btn" id="toolErase" data-tool="erase">🗑 Erase</button>
+                    <button class="tool-btn" id="toolUndo">↩ Undo</button>
+                    <button class="tool-btn" id="toolRedo">↪ Redo</button>
+                    <button class="tool-btn danger" id="toolClear">✕ Clear</button>
+                  </div>
+                </div>
+                <div class="cad-tool-group">
+                  <div class="tool-group-label">Grid & Snap</div>
+                  <div class="toggle-row">
+                    <label class="toggle-label">Grid <input type="checkbox" id="showGrid" checked><span
+                        class="toggle-switch"></span></label>
+                    <label class="toggle-label">Snap <input type="checkbox" id="snapGrid" checked><span
+                        class="toggle-switch"></span></label>
+                  </div>
+                </div>
+              </div>
+              <div class="cad-info">
+                <div class="cad-info-row"><span>Tool:</span><span id="cadCurrentTool">Wall</span></div>
+                <div class="cad-info-row"><span>Objects:</span><span id="cadObjectCount">0</span></div>
+                <div class="cad-info-row"><span>Scale:</span><span>1px = 10cm</span></div>
+              </div>
+            </div>
+            <div class="panel-right cad-right">
+              <div class="cad-canvas-wrapper">
+                <canvas id="cadCanvas" width="580" height="420"></canvas>
+                <div class="cad-cursor-pos" id="cadCursorPos">0, 0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 3: AI Prompt Interpreter -->
+        <div class="phase-panel" id="panel-3">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">03</div>
+                <div>
+                  <h3 class="panel-title">AI Prompt Interpreter</h3>
+                  <p class="panel-subtitle">LLM-powered Natural Language → Structured JSON</p>
+                </div>
+              </div>
+              <div class="prompt-section">
+                <label class="form-label">Describe Your Dream Home</label>
+                <textarea id="designPrompt" class="prompt-textarea"
+                  placeholder="e.g. I want a 3BHK apartment with 1200 sq ft. Modern style with earthy tones. Budget is ₹15 lakhs. I need a spacious living room, open kitchen, master bedroom with walk-in closet, and two kids' rooms. Prefer Vastu-compliant layout..."></textarea>
+                <div class="prompt-examples">
+                  <div class="prompt-example-label">Quick Examples:</div>
+                  <div class="prompt-chips">
+                    <button class="prompt-chip"
+                      data-prompt="3BHK modern apartment, 1500 sqft, budget ₹20L, earthy tones, open kitchen, Vastu compliant">3BHK
+                      Modern</button>
+                    <button class="prompt-chip"
+                      data-prompt="Studio apartment, 500 sqft, minimalist style, budget ₹8L, white and wood palette, lots of natural light">Studio
+                      Minimal</button>
+                    <button class="prompt-chip"
+                      data-prompt="4BHK luxury villa, 3000 sqft, contemporary style, budget ₹50L, marble flooring, premium furniture, home theater">4BHK
+                      Luxury Villa</button>
+                    <button class="prompt-chip"
+                      data-prompt="2BHK apartment, 900 sqft, Scandinavian style, budget ₹12L, light colors, cozy and warm atmosphere">2BHK
+                      Scandinavian</button>
+                  </div>
+                </div>
+                <button class="btn-primary btn-ai" id="interpretBtn">
+                  <span class="btn-ai-icon">🤖</span>
+                  Interpret with AI
+                </button>
+              </div>
+            </div>
+            <div class="panel-right">
+              <div class="json-output-wrapper">
+                <div class="json-output-header">
+                  <span>Structured JSON Output</span>
+                  <div class="json-status" id="jsonStatus">Waiting...</div>
+                </div>
+                <div class="json-output" id="jsonOutput">
+                  <div class="json-placeholder">
+                    <div class="json-icon">{ }</div>
+                    <div>Enter a prompt and click Interpret</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 4: AI Floor Planning Engine -->
+        <div class="phase-panel" id="panel-4">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">04</div>
+                <div>
+                  <h3 class="panel-title">AI Floor Planning Engine</h3>
+                  <p class="panel-subtitle">Computational Geometry + Optimization Algorithms</p>
+                </div>
+              </div>
+              <div class="fp-controls">
+                <div class="form-group">
+                  <label>Total Area (sq ft)</label>
+                  <input type="number" id="fpArea" value="1200" min="400" max="5000" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label>Configuration</label>
+                  <select id="fpConfig" class="form-input">
+                    <option value="1bhk">1 BHK</option>
+                    <option value="2bhk">2 BHK</option>
+                    <option value="3bhk" selected>3 BHK</option>
+                    <option value="4bhk">4 BHK</option>
+                    <option value="studio">Studio</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Style</label>
+                  <select id="fpStyle" class="form-input">
+                    <option value="modern">Modern</option>
+                    <option value="traditional">Traditional</option>
+                    <option value="minimalist">Minimalist</option>
+                    <option value="luxury">Luxury</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Plot Shape</label>
+                  <select id="fpShape" class="form-input">
+                    <option value="rectangle">Rectangle</option>
+                    <option value="lshape">L-Shape</option>
+                    <option value="square">Square</option>
+                  </select>
+                </div>
+                <button class="btn-primary" id="generateFloorPlan">
+                  <span>⚡</span> Generate Floor Plan
+                </button>
+                <button class="btn-ghost" id="regenerateFloorPlan">🔄 Regenerate</button>
+              </div>
+              <div class="fp-legend" id="fpLegend"></div>
+            </div>
+            <div class="panel-right">
+              <div class="fp-canvas-wrapper">
+                <canvas id="floorPlanCanvas" width="500" height="420"></canvas>
+                <div class="fp-overlay" id="fpOverlay">
+                  <div class="fp-placeholder-text">Configure and generate your floor plan</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 5: Vastu Validation -->
+        <div class="phase-panel" id="panel-5">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">05</div>
+                <div>
+                  <h3 class="panel-title">AI Vastu Validation</h3>
+                  <p class="panel-subtitle">Rule Engine + Knowledge Base + Auto-Correction</p>
+                </div>
+              </div>
+              <div class="vastu-compass-wrapper">
+                <canvas id="vastuCompass" width="200" height="200"></canvas>
+              </div>
+              <button class="btn-primary" id="vastuValidate">🕉 Validate Vastu</button>
+              <button class="btn-primary btn-ai" id="vastuAutoDesign" style="margin-top:10px;">✨ Auto-Design Vastu
+                Layout</button>
+              <div class="vastu-results" id="vastuResults"></div>
+            </div>
+            <div class="panel-right">
+              <div class="vastu-rules-panel" id="vastuRulesPanel">
+                <div class="vastu-panel-header">Vastu Rules Checklist</div>
+                <div id="vastuRulesList"></div>
+              </div>
+              <div class="vastu-canvas-wrapper" id="vastuCanvasWrapper"
+                style="display:none; width: 100%; height: 100%; background: var(--bg-tertiary); border-radius: 12px; position: relative;">
+                <canvas id="vastuFloorPlanCanvas" width="500" height="420" style="width: 100%; height: 100%;"></canvas>
+                <div class="vastu-compass-overlay" style="position: absolute; top: 10px; right: 10px; opacity: 0.7;">
+                  <canvas id="vastuMiniCompass" width="60" height="60"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 6: Material Recommendation -->
+        <div class="phase-panel" id="panel-6">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">06</div>
+                <div>
+                  <h3 class="panel-title">AI Material Recommendation</h3>
+                  <p class="panel-subtitle">Budget + Style + Durability → Ranked Catalog</p>
+                </div>
+              </div>
+              <div class="material-filters">
+                <div class="form-group">
+                  <label>Budget Range</label>
+                  <select id="matBudget" class="form-input">
+                    <option value="economy">Economy (₹5–10L)</option>
+                    <option value="mid" selected>Mid-Range (₹10–20L)</option>
+                    <option value="premium">Premium (₹20–40L)</option>
+                    <option value="luxury">Luxury (₹40L+)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Style Preference</label>
+                  <select id="matStyle" class="form-input">
+                    <option value="modern" selected>Modern</option>
+                    <option value="traditional">Traditional</option>
+                    <option value="minimalist">Minimalist</option>
+                    <option value="rustic">Rustic</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>AI Theme Engine (Auto-Apply)</label>
+                  <select id="aiThemeEngine" class="form-input" style="border-color: var(--primary);">
+                    <option value="none" selected>Select a theme...</option>
+                    <option value="scandinavian">Scandinavian Light</option>
+                    <option value="industrial">Industrial Loft</option>
+                    <option value="luxury">Modern Luxury</option>
+                    <option value="bohemian">Bohemian Chic</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Category</label>
+                  <div class="material-cat-tabs" id="matCatTabs">
+                    <button class="mat-cat active" data-cat="flooring">Flooring</button>
+                    <button class="mat-cat" data-cat="paint">Paint</button>
+                    <button class="mat-cat" data-cat="furniture">Furniture</button>
+                    <button class="mat-cat" data-cat="lighting">Lighting</button>
+                    <button class="mat-cat" data-cat="kitchen">Kitchen</button>
+                    <button class="mat-cat" data-cat="laminates">Laminates</button>
+                    <button class="mat-cat" data-cat="bathroom">Bathroom</button>
+                  </div>
+                </div>
+                <button class="btn-primary" id="getMaterials">🎨 Get Recommendations</button>
+              </div>
+            </div>
+            <div class="panel-right">
+              <div class="material-split-view" style="display:flex; flex-direction:column; gap:15px; height:100%;">
+                <div class="materials-grid-container" style="flex:1; overflow-y:auto; min-height: 50%;">
+                  <div class="materials-grid" id="materialsGrid">
+                    <div class="materials-placeholder">Select filters and click Get Recommendations</div>
+                  </div>
+                </div>
+                <div class="material-3d-preview" id="material3DPreview"
+                  style="display:none; flex:1; background:var(--bg-tertiary); border-radius:12px; position:relative; overflow:hidden;">
+                  <div id="materialPreviewCanvas" style="width:100%; height:100%;"></div>
+                  <div
+                    style="position:absolute; bottom:10px; left:10px; background:rgba(0,0,0,0.7); padding:4px 8px; border-radius:4px; color:white; font-size:12px;"
+                    id="previewLabel">Virtual 3D Preview</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 7: Furniture Placement -->
+        <div class="phase-panel" id="panel-7">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">07</div>
+                <div>
+                  <h3 class="panel-title">AI Furniture Placement</h3>
+                  <p class="panel-subtitle">Spatial Reasoning + Collision Detection + Auto-Align</p>
+                </div>
+              </div>
+              <div class="furniture-controls">
+                <div class="form-group">
+                  <label>Room Type</label>
+                  <select id="furnRoom" class="form-input">
+                    <option value="living">Living Room</option>
+                    <option value="bedroom">Bedroom</option>
+                    <option value="kitchen">Kitchen</option>
+                    <option value="dining">Dining Room</option>
+                    <option value="office">Home Office</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Room Size (W × H ft)</label>
+                  <div class="size-inputs">
+                    <input type="number" id="roomW" value="16" min="8" max="40" class="form-input"
+                      placeholder="Width" />
+                    <span>×</span>
+                    <input type="number" id="roomH" value="14" min="8" max="40" class="form-input"
+                      placeholder="Height" />
+                  </div>
+                </div>
+                <button class="btn-primary" id="placeFurniture">🪑 Auto-Place Furniture</button>
+                <button class="btn-ghost" id="shuffleFurniture">🔀 Shuffle Layout</button>
+              </div>
+              <div class="furniture-legend" id="furnitureLegend"></div>
+            </div>
+            <div class="panel-right">
+              <div class="furniture-canvas-wrapper">
+                <canvas id="furnitureCanvas" width="500" height="400"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 8: 3D Scene Generator -->
+        <div class="phase-panel" id="panel-8">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">08</div>
+                <div>
+                  <h3 class="panel-title">3D Scene Generator</h3>
+                  <p class="panel-subtitle">Three.js — Walls, Floors, Ceilings, Furniture</p>
+                </div>
+              </div>
+              <div class="scene-controls">
+                <div class="form-group">
+                  <label>Room Theme</label>
+                  <select id="scene3DTheme" class="form-input">
+                    <option value="modern">Modern Apartment</option>
+                    <option value="rustic">Rustic Cottage</option>
+                    <option value="luxury">Luxury Suite</option>
+                    <option value="minimalist">Minimalist Zen</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Wall Color</label>
+                  <div class="color-palette" id="wallColorPalette">
+                    <div class="color-swatch active" data-color="#F5F0E8" style="background:#F5F0E8;"></div>
+                    <div class="color-swatch" data-color="#E8EAF6" style="background:#E8EAF6;"></div>
+                    <div class="color-swatch" data-color="#E8F5E9" style="background:#E8F5E9;"></div>
+                    <div class="color-swatch" data-color="#FFF3E0" style="background:#FFF3E0;"></div>
+                    <div class="color-swatch" data-color="#2C2C3E" style="background:#2C2C3E;"></div>
+                    <div class="color-swatch" data-color="#1A1A2E" style="background:#1A1A2E;"></div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Floor Material</label>
+                  <select id="floorMaterial" class="form-input">
+                    <option value="wood">Hardwood</option>
+                    <option value="marble">Marble</option>
+                    <option value="tile">Ceramic Tile</option>
+                    <option value="concrete">Polished Concrete</option>
+                  </select>
+                </div>
+                <button class="btn-primary" id="generate3D">🎮 Generate 3D Scene</button>
+                <button class="btn-ghost" id="rotate3DBtn">🔄 Rotate View</button>
+              </div>
+              <div class="scene-info" id="sceneInfo"></div>
+            </div>
+            <div class="panel-right">
+              <div class="scene-3d-wrapper">
+                <canvas id="scene3DCanvas" width="500" height="400"></canvas>
+                <div class="scene-controls-overlay">
+                  <span class="scene-hint">Click Generate to create 3D scene</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 9: AI Camera & Lighting -->
+        <div class="phase-panel" id="panel-9">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">09</div>
+                <div>
+                  <h3 class="panel-title">AI Camera & Lighting</h3>
+                  <p class="panel-subtitle">Auto Camera Angles + HDRI + Lighting Placement</p>
+                </div>
+              </div>
+              <div class="camera-controls">
+                <div class="form-group">
+                  <label>Camera Preset</label>
+                  <select id="cameraPreset" class="form-input">
+                    <option value="wide">Wide Angle — Room Overview</option>
+                    <option value="corner">Corner Shot — Depth</option>
+                    <option value="eye">Eye Level — Natural View</option>
+                    <option value="birds">Bird's Eye — Top Down</option>
+                    <option value="cinematic">Cinematic — Drama</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Lighting Mode</label>
+                  <select id="lightingMode" class="form-input">
+                    <option value="daylight">Golden Hour Daylight</option>
+                    <option value="evening">Evening Warm Glow</option>
+                    <option value="studio">Studio Neutral</option>
+                    <option value="dramatic">Dramatic Moody</option>
+                    <option value="night">Night Interior</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>HDRI Environment</label>
+                  <select id="hdriEnv" class="form-input">
+                    <option value="sky">Clear Sky</option>
+                    <option value="overcast">Overcast</option>
+                    <option value="sunset">Sunset</option>
+                    <option value="studio">Studio Box</option>
+                  </select>
+                </div>
+                <button class="btn-primary" id="applyCamera">📷 Apply Camera & Lighting</button>
+                <button class="btn-ghost" id="autoCamera">🤖 AI Auto-Select</button>
+              </div>
+              <div class="camera-stats" id="cameraStats"></div>
+            </div>
+            <div class="panel-right">
+              <div class="camera-preview-wrapper">
+                <canvas id="cameraCanvas" width="500" height="400"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 10: Photorealistic Rendering -->
+        <div class="phase-panel" id="panel-10">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">10</div>
+                <div>
+                  <h3 class="panel-title">Photorealistic Rendering</h3>
+                  <p class="panel-subtitle">PBR + Global Illumination + Ray Tracing</p>
+                </div>
+              </div>
+              <div class="render-controls">
+                <div class="form-group">
+                  <label>Render Quality</label>
+                  <div class="quality-selector" id="qualitySelector">
+                    <button class="quality-btn" data-q="draft">Draft<span>Fast</span></button>
+                    <button class="quality-btn active" data-q="medium">Medium<span>2 min</span></button>
+                    <button class="quality-btn" data-q="high">High<span>5 min</span></button>
+                    <button class="quality-btn" data-q="ultra">Ultra<span>15 min</span></button>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Post Processing</label>
+                  <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" id="ppBloom" checked> Bloom</label>
+                    <label class="checkbox-item"><input type="checkbox" id="ppAO" checked> Ambient Occlusion</label>
+                    <label class="checkbox-item"><input type="checkbox" id="ppDOF"> Depth of Field</label>
+                    <label class="checkbox-item"><input type="checkbox" id="ppMotion"> Motion Blur</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Output Resolution</label>
+                  <select id="renderRes" class="form-input">
+                    <option value="hd">1920×1080 HD</option>
+                    <option value="2k">2560×1440 2K</option>
+                    <option value="4k">3840×2160 4K</option>
+                  </select>
+                </div>
+                <button class="btn-primary btn-render" id="startRender">
+                  <span class="render-icon">⚙️</span> Start Render
+                </button>
+              </div>
+              <div class="render-progress" id="renderProgress"></div>
+            </div>
+            <div class="panel-right">
+              <div class="render-output-wrapper">
+                <canvas id="renderCanvas" width="500" height="400"></canvas>
+                <div class="render-overlay" id="renderOverlay">
+                  <div class="render-placeholder">Configure settings and start render</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 11: Budget & Shopping Engine -->
+        <div class="phase-panel" id="panel-11">
+          <div class="panel-layout">
+            <div class="panel-left">
+              <div class="panel-header">
+                <div class="phase-number-badge">11</div>
+                <div>
+                  <h3 class="panel-title">Budget & Shopping Engine</h3>
+                  <p class="panel-subtitle">Itemized Estimates + Material Qty + Labor + Shopping List</p>
+                </div>
+              </div>
+              <div class="budget-controls">
+                <div class="form-group">
+                  <label>Total Budget (₹ Lakhs)</label>
+                  <input type="range" id="totalBudget" min="5" max="100" value="20" class="budget-slider" />
+                  <div class="budget-value" id="budgetValueDisplay">₹20 Lakhs</div>
+                </div>
+                <div class="form-group">
+                  <label>Area (sq ft)</label>
+                  <input type="number" id="budgetArea" value="1200" class="form-input" />
+                </div>
+                <div class="form-group">
+                  <label>Quality Level</label>
+                  <select id="budgetQuality" class="form-input">
+                    <option value="economy">Economy</option>
+                    <option value="standard" selected>Standard</option>
+                    <option value="premium">Premium</option>
+                    <option value="luxury">Luxury</option>
+                  </select>
+                </div>
+                <button class="btn-primary" id="generateBudget">💰 Generate Budget Report</button>
+                <button class="btn-ghost" id="exportPdfBtn" style="margin-top:10px;">📄 Export PDF Report</button>
+              </div>
+            </div>
+            <div class="panel-right">
+              <div class="budget-report" id="budgetReport" style="overflow-y:auto; max-height:100%;">
+                <div class="budget-placeholder">Configure and generate your budget report</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase 12: Complete Workflow -->
+        <div class="phase-panel" id="panel-12">
+          <div class="panel-layout full-width-panel">
+            <div class="panel-header centered">
+              <div class="phase-number-badge">12</div>
+              <div>
+                <h3 class="panel-title">Complete AI Workflow</h3>
+                <p class="panel-subtitle">End-to-end automated interior design pipeline</p>
+              </div>
+            </div>
+            <div class="workflow-section">
+              <div class="workflow-input">
+                <label class="form-label">One Prompt → Complete Design</label>
+                <textarea id="workflowPrompt" class="prompt-textarea"
+                  placeholder="Describe your complete interior design requirements..."></textarea>
+                <button class="btn-primary btn-huge" id="runFullWorkflow">
+                  <span>🚀</span> Run Complete AI Workflow
+                </button>
+              </div>
+              <div class="workflow-pipeline" id="workflowPipeline">
+                <!-- Injected by JS -->
+              </div>
+              <div class="workflow-results" id="workflowResults"></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /phase-panels -->
+    </div>
+  </section>
+
+  <!-- Workflow Overview -->
+  <section class="workflow-section-outer" id="workflow">
+    <div class="section-container">
+      <div class="section-header">
+        <div class="section-badge">How It Works</div>
+        <h2 class="section-title">The Complete AI Pipeline</h2>
+        <p class="section-desc">One prompt triggers the entire 12-phase automated workflow</p>
+      </div>
+      <div class="workflow-flow" id="workflowFlow"></div>
+    </div>
+  </section>
+
+  <!-- Partners & References Section -->
+  <section class="phases-section" id="references" style="padding-bottom: 4rem;">
+    <div class="section-container">
+      <div class="section-header" style="margin-bottom: 2rem;">
+        <div class="section-badge">Trusted Partners</div>
+        <h2 class="section-title">Official Brand References</h2>
+        <p class="section-desc">Our AI recommends materials and furniture directly from these industry-leading catalogs.</p>
+      </div>
+      <div class="references-grid" style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; max-width: 900px; margin: 0 auto;">
+        <a href="https://www.greenlam.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Greenlam</a>
+        <a href="https://www.centuryply.com/" target="_blank" class="phase-chip" style="text-decoration: none;">CenturyPly</a>
+        <a href="https://www.merinolaminates.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Merino Laminates</a>
+        <a href="https://www.asianpaints.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Asian Paints</a>
+        <a href="https://www.bergerpaints.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Berger Paints</a>
+        <a href="https://www.kajariaceramics.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Kajaria Tiles</a>
+        <a href="https://www.somanyceramics.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Somany Ceramics</a>
+        <a href="https://www.hettich.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Hettich India</a>
+        <a href="https://www.godrejinterio.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Godrej Interio</a>
+        <a href="https://www.ikea.com/in/en/" target="_blank" class="phase-chip" style="text-decoration: none;">IKEA India</a>
+        <a href="https://www.kohler.co.in/" target="_blank" class="phase-chip" style="text-decoration: none;">Kohler India</a>
+        <a href="https://www.jaquar.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Jaquar Bath</a>
+        <a href="https://www.cera-india.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Cera</a>
+        <a href="https://www.pepperfry.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Pepperfry</a>
+        <a href="https://www.urbanladder.com/" target="_blank" class="phase-chip" style="text-decoration: none;">Urban Ladder</a>
+        <a href="https://www.hometown.in/" target="_blank" class="phase-chip" style="text-decoration: none;">HomeTown</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="logo-icon">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="8" fill="url(#footLogoGrad)" />
+              <path d="M8 16L14 10L20 16L26 10" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path d="M8 22L14 16L20 22L26 16" stroke="white" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" opacity="0.6" />
+              <defs>
+                <linearGradient id="footLogoGrad" x1="0" y1="0" x2="32" y2="32">
+                  <stop offset="0%" stop-color="#7C3AED" />
+                  <stop offset="100%" stop-color="#2563EB" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="logo-text">DesignAI</span>
+        </div>
+        <p class="footer-desc">AI-Powered Interior Design Platform with 12-Phase Automated Pipeline</p>
+      </div>
+      <div class="footer-phases">
+        <div class="footer-col-title">Phases</div>
+        <div class="footer-phase-list" id="footerPhaseList"></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 DesignAI Platform. Built with ❤️ using AI</span>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <div class="loading-text" id="loadingText">Processing...</div>
+      <div class="loading-bar-wrapper">
+        <div class="loading-bar" id="loadingBar"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
